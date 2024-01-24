@@ -71,11 +71,14 @@ namespace CalculatorTest
         {
             int a, b;
             double expected, actual;
+            string operation;
             a = int.Parse(TestContext.DataRow[0].ToString());//đọc dữ liệu của từng dòng, lấy cột 0 của dòng đó
             b = int.Parse(TestContext.DataRow[1].ToString());
-            expected = double.Parse(TestContext.DataRow[2].ToString());
+            operation = TestContext.DataRow[2].ToString();
+            operation = operation.Remove(0, 1);
+            expected = double.Parse(TestContext.DataRow[3].ToString());
             c = new Calculation(a, b);
-            actual = c.Execute("+");
+            actual = c.Execute(operation);
             Assert.AreEqual(expected, actual);
 
         }
