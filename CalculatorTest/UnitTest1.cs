@@ -8,6 +8,7 @@ namespace CalculatorTest
     public class UnitTest1
     {
         private Calculation c;
+        public TestContext TestContext { get; set; }//tạo đối tượng cho phép đọc, ghi lên file TestData.csv
         [TestInitialize] //thiết lập bộ dữ liệu dùng chung cho tất cả các TestCase
         public void SetUp()
         {
@@ -60,6 +61,23 @@ namespace CalculatorTest
             c = new Calculation(15, 0);
             //TH chia 0 bị lỗi nhưng có thẻ [DivideByZero] đã bắt được lỗi
             Assert.ThrowsException<DivideByZeroException>(() => c.Execute("/"));
+        }
+
+        //Liên kết TestData với project
+        [TestMethod]
+        [DataSource("Microsoft.VisualStudio.TestTools.DataSource.CSV",
+            @".\Data\TestData.csv", "TestData#csv",DataAccessMethod.Sequential)]//Sequential: đọc tuần tự từ trên xuống
+        public void TestWithDataSource()
+        {
+            int a, b;
+            double expected, actual;
+            a = int.Parse(TestContext.DataRow[0].ToString());//đọc dữ liệu của từng dòng, lấy cột 0 của dòng đó
+            b = int.Parse(TestContext.DataRow[1].ToString());
+            expected = double.Parse(TestContext.DataRow[2].ToString());
+            c = new Calculation(a, b);
+            actual = c.Execute("+");
+            Assert.AreEqual(expected, actual);
+
         }
     }
 }
